@@ -50,7 +50,7 @@ app.post('/api/shorturl', (req, res) => {
       const filter = {url: reqURL }
       URL.findOneAndUpdate(filter, filter, { upsert: true }, (err, urlToUpdate) => {
         if(err) return console.log(err);
-        return res.send({ "original_url": urlToUpdate.url, "short_url": urlToUpdate._id });
+        return res.send({ "original_url": urlToUpdate.url, "short_url": parseInt(urlToUpdate._id) });
       });
     };
   });
