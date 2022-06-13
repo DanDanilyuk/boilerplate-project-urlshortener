@@ -35,7 +35,7 @@ app.get('/', function(req, res) {
 app.get('/api/shorturl/:id', (req, res) => {
   URL.findById({ _id: req.params.id }, function(err, urlFound) {
     if (err) return console.log(err);
-    res.redirect(urlFound.url);
+    return res.redirect(urlFound.url);
   });
 });
 
@@ -45,12 +45,12 @@ app.post('/api/shorturl', (req, res) => {
   const parsedLookupUrl = url.parse(reqURL);
   dns.lookup(parsedLookupUrl.hostname, (lookupErr, addresses) => {
     if(!addresses) {
-      res.send({ "error": 'invalid url' });
+      return res.send({ "error": 'invalid url' });
     } else {
       const filter = {url: reqURL }
       URL.findOneAndUpdate(filter, filter, { upsert: true }, (err, urlToUpdate) => {
         if(err) return console.log(err);
-        res.send({ "original_url": urlToUpdate.url, "short_url": urlToUpdate._id });
+        return res.send({ "original_url": urlToUpdate.url, "short_url": urlToUpdate._id });
       });
     };
   });
