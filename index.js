@@ -42,7 +42,6 @@ app.get('/api/shorturl/:id', (req, res) => {
 // Your first API endpoint
 app.post('/api/shorturl', (req, res) => {
   const reqURL = req.body.url;
-  console.log(`REQ_URL: ${reqURL}`);
   const parsedLookupUrl = url.parse(reqURL);
   dns.lookup(parsedLookupUrl.hostname, (lookupErr, addresses) => {
     if(!addresses) {
