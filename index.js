@@ -46,12 +46,12 @@ app.post('/api/shorturl', (req, res) => {
   const parsedLookupUrl = url.parse(reqURL);
   dns.lookup(parsedLookupUrl.hostname, (lookupErr, addresses) => {
     if(!addresses) {
-      res.send({ error: 'invalid url' });
+      res.send({ "error": 'invalid url' });
     } else {
       const filter = {url: reqURL }
       URL.findOneAndUpdate(filter, filter, { upsert: true }, (err, urlToUpdate) => {
         if(err) return console.log(err);
-        res.send({ "url": urlToUpdate.url, "short_url": urlToUpdate._id });
+        res.send({ "original_url": urlToUpdate.url, "short_url": urlToUpdate._id });
       });
     };
   });
