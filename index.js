@@ -19,7 +19,8 @@ const port = process.env.PORT || 3000;
 // --------------------
 // url : string [required]
 const urlSchema = new Schema({
-  url:  {type: String, required: true},
+  url: {type: String, required: true},
+  short_url: Number
 });
 
 const URL = mongoose.model("URL", urlSchema);
@@ -33,7 +34,7 @@ app.get('/', function(req, res) {
 });
 
 app.get('/api/shorturl/:id', (req, res) => {
-  URL.findById({ _id: req.params.id }, function(err, urlFound) {
+  URL.findOne({ short_url: req.params.id }, function(err, urlFound) {
     if (err) return console.log(err);
     return res.redirect(urlFound.url);
   });
@@ -48,9 +49,10 @@ app.post('/api/shorturl', (req, res) => {
       return res.send({ "error": 'invalid url' });
     } else {
       const filter = {url: reqURL }
-      URL.findOneAndUpdate(filter, filter, { upsert: true, new: true }, (err, urlToUpdate) => {
+      const update = {url: reqURL, short_url: Date.now() }
+      URL.findOneAndUpdate(filter, update, { upsert: true, new: true }, (err, matchedURL) => {
         if(err) return console.log(err);
-        return res.send({ "original_url": urlToUpdate.url, "short_url": urlToUpdate._id });
+        return res.json({ original_url: matchedURL.url, short_url: matchedURL.short_url });
       });
     };
   });
