@@ -48,9 +48,9 @@ app.post('/api/shorturl', (req, res) => {
       return res.send({ "error": 'invalid url' });
     } else {
       const filter = {url: reqURL }
-      URL.findOneAndUpdate(filter, filter, { upsert: true }, (err, urlToUpdate) => {
+      URL.findOneAndUpdate(filter, filter, { upsert: true, new: true }, (err, urlToUpdate) => {
         if(err) return console.log(err);
-        return res.send({ "original_url": urlToUpdate.url, "short_url": parseInt(urlToUpdate._id) });
+        return res.send({ "original_url": urlToUpdate.url, "short_url": urlToUpdate._id });
       });
     };
   });
